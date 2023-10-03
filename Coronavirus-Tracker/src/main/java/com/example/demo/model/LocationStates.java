@@ -1,13 +1,30 @@
 package com.example.demo.model;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
 public class LocationStates {
+	@Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String state;
     private String country;
     private int latestTotalDeaths;
     private int differFromPrevDay;
      
 
-    public int getDifferFromPrevDay() {
+    public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public int getDifferFromPrevDay() {
         return differFromPrevDay;
     }
 

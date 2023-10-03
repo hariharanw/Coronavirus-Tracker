@@ -5,6 +5,8 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+
+import com.example.demo.LocationStatesRepository;
 import com.example.demo.model.LocationStates;
 
 import javax.annotation.PostConstruct;
@@ -24,7 +26,11 @@ public class CoronaVirusDataServices {
 
     private static final String VIRUS_DATA_URL = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv";
     private static final Logger LOGGER = Logger.getLogger(CoronaVirusDataServices.class.getName());
+    private final LocationStatesRepository locationStatesRepository;
 
+    public CoronaVirusDataServices(LocationStatesRepository locationStatesRepository) {
+        this.locationStatesRepository = locationStatesRepository;
+    }
     private List<LocationStates> allStats = new ArrayList<>();
 
     public List<LocationStates> getAllStats() {
@@ -53,6 +59,7 @@ public class CoronaVirusDataServices {
                 locationStat.setDifferFromPrevDay(latestCases - prevDayCases);
                 newStats.add(locationStat);
             }
+            locationStatesRepository.saveAll(newStats);
             this.allStats = newStats;
         } catch (SSLHandshakeException e) {
             LOGGER.log(Level.SEVERE, "SSL Handshake Exception occurred", e);
